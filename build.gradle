@@ -1,0 +1,67 @@
+// buildscript中的声明是gradle脚本自身需要使用的资源。可以声明依赖项、第三方插件、maven仓库地址等
+// 而在build.gradle文件中直接声明的依赖项、仓库地址等信息是项目自身需要的资源
+// gradle在执行脚本时，会优先执行buildscript代码块中的内容，然后才会执行剩余的build脚本
+buildscript {
+    ext {
+        springBootVersion = '2.2.2.RELEASE'
+        springBootManagementVersion = '1.0.8.RELEASE'
+        springCloudVersion = 'Hoxton.SR1'
+    }
+    repositories {
+//        mavenLocal()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+//        maven { url "https://plugins.gradle.org/m2/" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:${springBootManagementVersion}")
+    }
+}
+
+allprojects {
+    group "com.wooyooge.jennywheel"
+    version "1.0.0"
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    apply plugin: 'war'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    jar {
+        enabled = true
+    }
+    bootJar {
+        classifier = 'boot'
+    }
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        mavenCentral()
+        maven { url 'https://repo.spring.io/snapshot' }
+        maven { url 'https://repo.spring.io/milestone' }
+    }
+    dependencies {
+        compile(
+                'org.springframework.boot:spring-boot-starter-web',
+                'org.springframework.boot:spring-boot-starter-tomcat',
+                'org.springframework.boot:spring-boot-starter-actuator',
+                'org.springframework.cloud:spring-cloud-starter',
+                'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
+                'com.google.guava:guava:23.0'
+        )
+        testCompile(
+                "org.springframework:spring-test",
+                "junit:junit:4.12"
+        )
+    }
+    dependencyManagement {
+        imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+        imports { mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}" }
+    }
+}
