@@ -22,29 +22,28 @@ buildscript {
 allprojects {
     group "com.wooyooge.jennywheel"
     version "1.0.0"
+    repositories {
+        maven {
+            url 'http://maven.aliyun.com/nexus/content/groups/public'
+        }
+        mavenCentral()
+    }
 }
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'application'
     apply plugin: 'idea'
-    apply plugin: 'eclipse'
     apply plugin: 'war'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
     jar {
         enabled = true
     }
     bootJar {
         classifier = 'boot'
-    }
-    repositories {
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        mavenCentral()
-        maven { url 'https://repo.spring.io/snapshot' }
-        maven { url 'https://repo.spring.io/milestone' }
     }
     dependencies {
         compile(
@@ -52,8 +51,8 @@ subprojects {
                 'org.springframework.boot:spring-boot-starter-tomcat',
                 'org.springframework.boot:spring-boot-starter-actuator',
                 'org.springframework.cloud:spring-cloud-starter',
-                'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
-                'com.google.guava:guava:23.0'
+                'com.google.guava:guava:23.0',
+                'org.projectlombok:lombok:1.18.10'
         )
         testCompile(
                 "org.springframework:spring-test",

@@ -1,3 +1,4 @@
 rootProject.name = 'jennywheel'
 include 'eureka-service'
+include 'zuul'
 
